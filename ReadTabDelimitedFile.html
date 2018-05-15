@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>My Google Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+<p> Please select a csv file where:<br><br>
+    - The first column is the Marker number<br>
+    - The second column is the Latitude<br>
+    - The third column is the Longitude.<br></p>
+
+<style>
+      #map{
+        height:600px;
+        width:100%;
+      }
+</style>
+
+<input type="file" name="File" id="file">
+<div id = "map"> </div>
+
+<script>
+
+var map;
+
+function initMap(){
+
+  //new map
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: new google.maps.LatLng(49.2827, -123.1207)
+  });
+
+  document.getElementById('file').onchange = function(){
+
+      var file = this.files[0];
+
+      var reader = new FileReader();
+      reader.onload = function(progressEvent){
+        // Entire file
+        //console.log(this.result);
+      // By lines
+      var lines = this.result.split('\n');
+      //console.log(lines)
+      var len = lines.length - 1
+      for(var line = 1; line < len; line++){
+          // By tabs
+          var tabs = lines[line].split(',');
+          //console.log(tabs)
+
+          addMarker(tabs)
+          //for(var tab = 0; tab < tabs.length; tab++){
+                  //console.log(tabs[tab]);
+          //}
+      }
+      };
+        reader.readAsText(file);
+
+    // Add Marker Function
+    function addMarker(option) {
+      //console.log(option)
+      var markerNumber = String(option[0]);
+      //console.log(markerNumber)
+      var latitude = parseFloat(option[1]);
+      //console.log(latitude)
+      var longitude = parseFloat(option[2]);
+      //console.log(longitude)
+      var myLatLng = {lat: latitude, lng:longitude};
+      //console.log(myLatLng);
+      var marker = new google.maps.Marker({
+      position:myLatLng,
+      label:markerNumber,
+      map:map,
+      });
+    }
+  }
+}
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUlIL5rDxD82yhhxLRKE-mgGxFOqRBCvE&callback=initMap">
+</script>
+
+</html>
